@@ -17,9 +17,8 @@ public class CallManager {
     private static final int NUMBER_OF_RESPONDENTS= 10;
     private static final int NUMBER_OF_MANAGERS= 5;
     private static final int NUMBER_OF_DIRECTORS= 2;
-    private Map<Integer, List<Employee>> allEmployees = new HashMap<>();
-    private Queue<Call> callQueues = new ArrayDeque<>();
-    private Map<Integer, Queue<Call>> queues = new HashMap<>();
+    private final Map<Integer, List<Employee>> allEmployees = new HashMap<>();
+    private final Map<Integer, Queue<Call>> callQueues = new HashMap<>();
 
     public CallManager() {
         initEmployees(NUMBER_OF_RESPONDENTS, Employee.LEVEL_RESPONDENT, "Respondent");
@@ -39,13 +38,13 @@ public class CallManager {
 
     public void callEnded(Call call) {
 
-        Queue<Call> queue = getQueue(call);
-        if (!queue.isEmpty()) {
-            Call nexCall = queue.peek();
+        Queue<Call> callQueue = getCallQueue(call);
+        if (!callQueue.isEmpty()) {
+            Call nexCall = callQueue.peek();
             int callLevel = nexCall.getLevel();
             Optional<Employee> freeEmployee = getFreeEmployee(callLevel);
             if (freeEmployee.isPresent()) {
-                queue.remove();
+                callQueue.remove();
                 freeEmployee.get().receiveCall(nexCall);
             }
         }
@@ -58,12 +57,12 @@ public class CallManager {
             call.setLevel(employee.getLevel());
             employee.receiveCall(call);
         } else {
-            getQueue(call).add(call);
+            getCallQueue(call).add(call);
         }
     }
 
-    private Queue<Call> getQueue(Call call) {
-        return queues.computeIfAbsent(call.getLevel(), v -> new ArrayDeque<>());
+    private Queue<Call> getCallQueue(Call call) {
+        return callQueues.computeIfAbsent(call.getLevel(), v -> new ArrayDeque<>());
     }
 
     private Optional<Employee> getFreeEmployee(int level) {

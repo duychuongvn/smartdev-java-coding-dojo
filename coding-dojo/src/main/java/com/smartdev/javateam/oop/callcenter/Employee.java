@@ -7,8 +7,8 @@ public class Employee {
     protected static final int LEVEL_DIRECTOR = 3;
     private final String name;
     private final int level;
-    private boolean isFree = true;
     protected CallManager callManager;
+    private boolean isFree = true;
 
     protected Employee(String name, int level, CallManager callManager) {
         this.level = level;
@@ -18,7 +18,7 @@ public class Employee {
 
     public void receiveCall(Call call) {
 
-        if(canNotAnswer(call)) {
+        if (canNotAnswer(call)) {
             escalateCall(call);
         } else {
             answerCall(call);
@@ -28,7 +28,7 @@ public class Employee {
 
     private void answerCall(Call call) {
         this.isFree = false;
-        System.out.println("Call received by employee "+ this.name + " for customer " + call.getCustomerName());
+        System.out.println("Call received by employee " + this.name + " for customer " + call.getCustomerName());
         CallRecorder.record(call, this);
         try {
             Thread.sleep(2000);
@@ -42,17 +42,17 @@ public class Employee {
     }
 
     public void endCall(Call call) {
-        System.out.println("Call ended by employee "+ this.name + " for customer " + call.getCustomerName());
+        System.out.println("Call ended by employee " + this.name + " for customer " + call.getCustomerName());
         this.isFree = true;
         this.callManager.callEnded(call);
     }
 
 
-   public void escalateCall(Call call) {
-       this.setFree();
-       call.setLevel(call.getLevel() + 1);
-       this.callManager.dispatchCall(call);
-   }
+    public void escalateCall(Call call) {
+        this.setFree();
+        call.setLevel(call.getLevel() + 1);
+        this.callManager.dispatchCall(call);
+    }
 
     public boolean isFree() {
         return isFree;

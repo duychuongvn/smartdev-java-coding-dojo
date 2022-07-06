@@ -1,8 +1,6 @@
 package com.smartdev.javateam.oop.callcenter;
 
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 public class Manager extends Employee {
 
     protected Manager(String name, CallManager callManager) {

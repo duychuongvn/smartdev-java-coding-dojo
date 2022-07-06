@@ -2,8 +2,8 @@ package com.smartdev.javateam.oop.callcenter;
 
 public class Call {
 
-    private String customerName;
     private final int callId;
+    private String customerName;
     private int level;
 
     public Call(int callId) {

@@ -1,7 +1,5 @@
 package com.smartdev.javateam.oop.callcenter;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 public class Respondent extends Employee {
 
     protected Respondent(String name, CallManager callManager) {

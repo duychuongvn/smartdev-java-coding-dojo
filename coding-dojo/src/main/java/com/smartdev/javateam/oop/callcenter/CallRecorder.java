@@ -9,7 +9,7 @@ public class CallRecorder {
 
     private static final Map<Integer, List<Call>> callRecords = new ConcurrentHashMap<>();
 
-    public  static  void record(Call call, Employee employee) {
+    public static void record(Call call, Employee employee) {
         callRecords.computeIfAbsent(employee.getLevel(), v -> new ArrayList<>()).add(call);
     }
 
