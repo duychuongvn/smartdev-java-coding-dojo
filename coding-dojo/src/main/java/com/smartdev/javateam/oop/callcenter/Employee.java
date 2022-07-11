@@ -29,7 +29,7 @@ public class Employee {
     private void answerCall(Call call) {
         this.isFree = false;
         System.out.println("Call received by employee " + this.name + " for customer " + call.getCustomerName());
-        CallRecorder.record(call, this);
+        callManager.onReceived(call, this);
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {

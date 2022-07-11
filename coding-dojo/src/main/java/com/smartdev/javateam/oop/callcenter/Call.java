@@ -1,15 +1,22 @@
 package com.smartdev.javateam.oop.callcenter;
 
+import java.util.concurrent.CountDownLatch;
+
 public class Call {
 
     private final int callId;
     private String customerName;
     private int level;
 
-    public Call(int callId) {
+    private CountDownLatch countDownLatch;
+    public Call(int callId, CountDownLatch countDownLatch) {
         this.callId = callId;
+        this.countDownLatch = countDownLatch;
     }
 
+    public void endCall() {
+        this.countDownLatch.countDown();
+    }
     public String getCustomerName() {
         return customerName;
     }

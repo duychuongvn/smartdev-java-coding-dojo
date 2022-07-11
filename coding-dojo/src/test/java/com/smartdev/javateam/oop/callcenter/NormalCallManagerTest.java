@@ -4,11 +4,14 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
-public class CallManagerTest {
+public class NormalCallManagerTest {
+    final int maxCalls = 30;
+    final CountDownLatch latch = new CountDownLatch(maxCalls);
 
     /**
      * Suppose:
@@ -20,9 +23,8 @@ public class CallManagerTest {
     @Test
     public void respondentShouldReceiveTheCall() throws InterruptedException {
 
-        CallManager callManager = new CallManager();
+        CallManager callManager = new NormalCallManager();
         ExecutorService executors = Executors.newCachedThreadPool();
-        int maxCalls = 30;
         for (int i = 0; i < maxCalls; i++) {
             int callId = i + 1;
             executors.submit(call(callId, 1, "Customer: " + callId, callManager))
@@ -31,10 +33,7 @@ public class CallManagerTest {
 
         executors.shutdown();
 
-        // wait for all threads finish
-        while (!executors.isTerminated()) {
-            Thread.sleep(2000);
-        }
+        latch.await();
         List<Call> respondentCalls = CallRecorder.getCalls(Employee.LEVEL_RESPONDENT);
         Assert.assertTrue("Respondents received all odd calls", respondentCalls.stream().allMatch(x -> x.getCallId() % 2 == 1));
         List<Call> managerCalls = CallRecorder.getCalls(Employee.LEVEL_MANAGER);
@@ -51,11 +50,10 @@ public class CallManagerTest {
     private Runnable call(int callId, int level, String customerName, CallManager callManager) {
         return () -> {
 
-            Call call = new Call(callId);
+            Call call = new Call(callId, latch);
             call.setLevel(level);
             call.setCustomerName(customerName);
             callManager.dispatchCall(call);
-
         };
     }
 }
