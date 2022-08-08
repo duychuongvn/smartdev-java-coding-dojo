@@ -1,5 +1,6 @@
 package com.smartdev.javateam.oop.callcenter;
 
+import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 
 public class Call {
@@ -8,15 +9,10 @@ public class Call {
     private String customerName;
     private int level;
 
-    private CountDownLatch countDownLatch;
-    public Call(int callId, CountDownLatch countDownLatch) {
+    public Call(int callId) {
         this.callId = callId;
-        this.countDownLatch = countDownLatch;
     }
 
-    public void endCall() {
-        this.countDownLatch.countDown();
-    }
     public String getCustomerName() {
         return customerName;
     }
@@ -35,5 +31,18 @@ public class Call {
 
     public int getCallId() {
         return callId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Call call = (Call) o;
+        return getCallId() == call.getCallId();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getCallId());
     }
 }

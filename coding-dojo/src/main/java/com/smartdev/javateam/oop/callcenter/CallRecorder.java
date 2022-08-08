@@ -1,19 +1,24 @@
 package com.smartdev.javateam.oop.callcenter;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.*;
 
 public class CallRecorder {
 
-    private static final Map<Integer, List<Call>> callRecords = new ConcurrentHashMap<>();
-
+    public static final Map<Integer, Set<Call>> callRecords = Collections.synchronizedMap(new HashMap<>());
+    private static final Object locker = new Object();
     public static void record(Call call, Employee employee) {
-        callRecords.computeIfAbsent(employee.getLevel(), v -> new ArrayList<>()).add(call);
+        if(!callRecords.containsKey(employee.getLevel())) {
+            synchronized (locker) {
+                if(!callRecords.containsKey(employee.getLevel())) {
+                    callRecords.put(employee.getLevel(),  Collections.synchronizedSet(new HashSet<>()));
+                }
+            }
+        }
+        Set<Call> calls = callRecords.get(employee.getLevel());
+        calls.add(call);
     }
 
-    public static List<Call> getCalls(int level) {
+    public static Set<Call> getCalls(int level) {
         return callRecords.get(level);
     }
 }

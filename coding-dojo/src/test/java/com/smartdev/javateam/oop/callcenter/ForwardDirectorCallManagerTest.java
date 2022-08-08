@@ -8,11 +8,10 @@ import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
+import static org.junit.Assert.*;
 
-public class NormalCallManagerTest {
+public class ForwardDirectorCallManagerTest {
     final int maxCalls = 30;
     final CountDownLatch latch = new CountDownLatch(maxCalls);
 
@@ -26,16 +25,17 @@ public class NormalCallManagerTest {
     @Test
     public void respondentShouldReceiveTheCall() throws InterruptedException {
 
-        CallManager callManager = new NormalCallManager(latch);
+        CallManager callManager = new ForwardDirectorCallManager(latch);
         ExecutorService executors = Executors.newCachedThreadPool();
         for (int i = 0; i < maxCalls; i++) {
             int callId = i + 1;
-            executors.submit(call(callId, 1, "Customer: " + callId, callManager));
+            executors.submit(call(callId, 1, "Customer: " + callId, callManager))
+            ;
         }
 
         executors.shutdown();
 
-        latch.await(5, TimeUnit.SECONDS);
+        latch.await();
         Set<Call> respondentCalls = CallRecorder.getCalls(Employee.LEVEL_RESPONDENT);
         Assert.assertTrue("Respondents received all odd calls", respondentCalls.stream().allMatch(x -> x.getCallId() % 2 == 1));
         Set<Call> managerCalls = CallRecorder.getCalls(Employee.LEVEL_MANAGER);

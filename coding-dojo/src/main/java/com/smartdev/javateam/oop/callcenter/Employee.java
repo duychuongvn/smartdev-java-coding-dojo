@@ -26,12 +26,23 @@ public class Employee {
         }
     }
 
+    private void markBusy() {
+        synchronized (this) {
+            this.isFree = false;
+        }
+    }
+
+    private void markFree() {
+        synchronized (this) {
+            this.isFree = true;
+        }
+    }
     private void answerCall(Call call) {
-        this.isFree = false;
+        markBusy();
         System.out.println("Call received by employee " + this.name + " for customer " + call.getCustomerName());
         callManager.onReceived(call, this);
         try {
-            Thread.sleep(2000);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             // Do nothing
         }
@@ -43,7 +54,7 @@ public class Employee {
 
     public void endCall(Call call) {
         System.out.println("Call ended by employee " + this.name + " for customer " + call.getCustomerName());
-        this.isFree = true;
+        markFree();
         this.callManager.callEnded(call);
     }
 
@@ -55,11 +66,14 @@ public class Employee {
     }
 
     public boolean isFree() {
-        return isFree;
+        synchronized (this){
+            return isFree;
+        }
+
     }
 
     protected void setFree() {
-        isFree = true;
+       markFree();
     }
 
     public int getLevel() {
