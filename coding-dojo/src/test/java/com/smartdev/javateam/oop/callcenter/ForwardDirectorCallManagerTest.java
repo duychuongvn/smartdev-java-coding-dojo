@@ -45,8 +45,8 @@ public class ForwardDirectorCallManagerTest {
         Assert.assertTrue("Directors received the calls divided for 4", directorCalls.stream().allMatch(x -> x.getCallId() % 4 == 0));
 
         Assert.assertEquals(15, respondentCalls.size());
-        Assert.assertEquals(8, managerCalls.size());
-        Assert.assertEquals(7, directorCalls.size());
+        Assert.assertEquals(5, managerCalls.size());
+        Assert.assertEquals(10, directorCalls.size());
     }
 
     private Runnable call(int callId, int level, String customerName, CallManager callManager) {

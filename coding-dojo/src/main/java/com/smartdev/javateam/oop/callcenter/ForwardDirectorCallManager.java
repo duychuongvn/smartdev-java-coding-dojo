@@ -36,8 +36,7 @@ public class ForwardDirectorCallManager implements CallManager {
 
             Optional<Employee> freeEmployee = getFreeEmployee(call.getLevel());
             if (freeEmployee.isPresent()) {
-                Call nexCall = callQueue.peek();
-                callQueue.remove();
+                Call nexCall = callQueue.poll();
                 freeEmployee.get().receiveCall(nexCall);
             }
         }

@@ -40,8 +40,8 @@ public class NormalCallManager implements CallManager{
         if (!callQueue.isEmpty()) {
             Optional<Employee> freeEmployee = getFreeEmployee(call.getLevel());
             if (freeEmployee.isPresent()) {
-                Call nexCall = callQueue.peek();
-                callQueue.remove();
+                Call nexCall = callQueue.poll();
+//                callQueue.remove();
                 freeEmployee.get().receiveCall(nexCall);
             }
         }

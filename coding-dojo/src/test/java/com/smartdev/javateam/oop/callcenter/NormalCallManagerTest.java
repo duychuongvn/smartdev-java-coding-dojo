@@ -30,7 +30,7 @@ public class NormalCallManagerTest {
         ExecutorService executors = Executors.newCachedThreadPool();
         for (int i = 0; i < maxCalls; i++) {
             int callId = i + 1;
-            executors.submit(call(callId, 1, "Customer: " + callId, callManager));
+            executors.submit(call(callId, 1, "Customer " + callId, callManager));
         }
 
         executors.shutdown();

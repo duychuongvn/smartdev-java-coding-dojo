@@ -39,7 +39,7 @@ public class Employee {
     }
     private void answerCall(Call call) {
         markBusy();
-        System.out.println("Call received by employee " + this.name + " for customer " + call.getCustomerName());
+        System.out.println("Call " + call.getCallId() + " received by employee " + this.name + " for customer " + call.getCustomerName());
         callManager.onReceived(call, this);
         try {
             Thread.sleep(1000);
@@ -53,7 +53,7 @@ public class Employee {
     }
 
     public void endCall(Call call) {
-        System.out.println("Call ended by employee " + this.name + " for customer " + call.getCustomerName());
+        System.out.println("Call " + call.getCallId() + " ended by employee " + this.name + " for customer " + call.getCustomerName());
         markFree();
         this.callManager.callEnded(call);
     }
@@ -67,6 +67,10 @@ public class Employee {
 
     public boolean isFree() {
         synchronized (this){
+            if(isFree) {
+                isFree = false;
+                return true;
+            }
             return isFree;
         }
 
